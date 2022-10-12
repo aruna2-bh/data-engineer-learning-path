@@ -10,35 +10,9 @@
 # MAGIC %md
 # MAGIC # Project Information
 # MAGIC 
-# MAGIC * Name: **Data Engineer Learning Path**
+# MAGIC * Name: **Example Course**
 # MAGIC * Version:  **1.0.0**
-# MAGIC * Built On: **Oct 11, 2022 at 22:29:38 UTC**
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## Trouble Shoooting
-# MAGIC * Spark Version
-# MAGIC * Cannot Install Libraries
-# MAGIC * Requires Unity Catalog
-# MAGIC * Cannot Create Schema
-# MAGIC * Cannot Create Catalog
-# MAGIC     * Required
-# MAGIC     * Not Required    
-
-# COMMAND ----------
-
-# MAGIC %md ### Spark Version
-# MAGIC To ensure that all labs execute as expected, Databricks Academy requires that the content provided be executed against a cluster configured with a specific runtime. Typically this is an LTS (long-term supported) version.
-# MAGIC 
-# MAGIC This course was tested against, and requires, one of the following DBRs (Databricks Runtime): **11.3.x-scala2.12**.
-# MAGIC 
-# MAGIC Please reconfigure your cluster accordingly.
-
-# COMMAND ----------
-
-# MAGIC %md ## Copyrights
-# MAGIC This section documents the various copyrights as they relate to the datasets used in this course.
+# MAGIC * Built On: **Oct 12, 2022 at 18:29:56 UTC**
 
 # COMMAND ----------
 

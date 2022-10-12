@@ -4,7 +4,7 @@
 
 # COMMAND ----------
 
-#%run ./_pipeline_config
+# MAGIC %run ./_pipeline_config
 
 # COMMAND ----------
 
