@@ -35,7 +35,7 @@
 -- MAGIC To begin this lesson, go through the process of adding this notebook to your pipeline using the DLT UI, and then trigger an update.
 -- MAGIC 
 -- MAGIC <img src="https://files.training.databricks.com/images/icon_hint_24.png"> The link to this notebook can be found back in [DE 4.1 - DLT UI Walkthrough]($../DE 4.1 - DLT UI Walkthrough)<br/>
--- MAGIC in the printed instructions for **Task #3** under the section **Generate Pipline Configuration**
+-- MAGIC in the printed instructions for **Task #3** under the section **Generate Pipeline Configuration**
 
 -- COMMAND ----------
 

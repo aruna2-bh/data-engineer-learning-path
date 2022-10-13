@@ -11,8 +11,8 @@
 # MAGIC # Project Information
 # MAGIC 
 # MAGIC * Name: **Data Engineer Learning Path**
-# MAGIC * Version:  **1.0.0**
-# MAGIC * Built On: **Oct 11, 2022 at 22:29:38 UTC**
+# MAGIC * Version:  **1.0.1**
+# MAGIC * Built On: **Oct 13, 2022 at 18:45:02 UTC**
 
 # COMMAND ----------
 
@@ -31,7 +31,7 @@
 # MAGIC %md ### Spark Version
 # MAGIC To ensure that all labs execute as expected, Databricks Academy requires that the content provided be executed against a cluster configured with a specific runtime. Typically this is an LTS (long-term supported) version.
 # MAGIC 
-# MAGIC This course was tested against, and requires, one of the following DBRs (Databricks Runtime): **11.3.x-scala2.12**.
+# MAGIC This course was tested against, and requires, one of the following DBRs (Databricks Runtime): **11.3.x-scala2.12, 11.3.x-photon-scala2.12, 11.3.x-cpu-ml-scala2.12**.
 # MAGIC 
 # MAGIC Please reconfigure your cluster accordingly.
 

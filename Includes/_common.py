@@ -49,9 +49,7 @@
 # COMMAND ----------
 
 # MAGIC %pip install \
-# MAGIC git+https://github.com/databricks-academy/dbacademy-gems@v1.1.20 \
-# MAGIC git+https://github.com/databricks-academy/dbacademy-rest@v1.1.1 \
-# MAGIC git+https://github.com/databricks-academy/dbacademy-helper@v2.0.9 \
+# MAGIC git+https://github.com/databricks-academy/dbacademy@v1.0.2 \
 # MAGIC --quiet --disable-pip-version-check
 
 # COMMAND ----------
@@ -60,20 +58,30 @@
 
 # COMMAND ----------
 
-from dbacademy_gems import dbgems
-from dbacademy_helper import DBAcademyHelper, Paths, CourseConfig, LessonConfig
+from dbacademy import dbgems
+from dbacademy.dbhelper import DBAcademyHelper, Paths, CourseConfig, LessonConfig
 
 # The following attributes are externalized to make them easy
 # for content developers to update with every new course.
 
-course_config = CourseConfig(course_code = "delp",                              # The abbreviated version of the course
-                             course_name = "data-engineer-learning-path",       # The full name of the course, hyphenated
-                             data_source_name = "data-engineer-learning-path",  # Should be the same as the course
-                             data_source_version = "v01",                       # New courses would start with 01
-                             install_min_time = "2 min",                        # The minimum amount of time to install the datasets (e.g. from Oregon)
-                             install_max_time = "10 min",                       # The maximum amount of time to install the datasets (e.g. from India)
-                             remote_files = remote_files,                       # The enumerated list of files in the datasets
-                             supported_dbrs = ["11.3.x-scala2.12"])
+course_config = CourseConfig(course_code = "delp",
+                             course_name = "data-engineer-learning-path",
+                             data_source_name = "data-engineer-learning-path",
+                             data_source_version = "v01",
+                             install_min_time = "2 min",
+                             install_max_time = "10 min",
+                             remote_files = remote_files,
+                             supported_dbrs = ["11.3.x-scala2.12", "11.3.x-photon-scala2.12", "11.3.x-cpu-ml-scala2.12"],
+                             expected_dbrs = "11.3.x-scala2.12, 11.3.x-photon-scala2.12, 11.3.x-cpu-ml-scala2.12")
+
+# Defined here for the majority of lessons, 
+# and later modified on a per-lesson basis.
+lesson_config = LessonConfig(name = None,
+                             create_schema = True,
+                             create_catalog = False,
+                             requires_uc = False,
+                             installing_datasets = True,
+                             enable_streaming_support = False)
 
 # COMMAND ----------
 

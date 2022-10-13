@@ -3,14 +3,9 @@
 
 # COMMAND ----------
 
-lesson_config = LessonConfig(name = None,
-                             create_schema = False,
-                             create_catalog = False,
-                             requires_uc = False,
-                             installing_datasets = False,
-                             enable_streaming_support = False)
+lesson_config.create_schema = False
+lesson_config.installing_datasets = False
 
-DA = DBAcademyHelper(course_config=course_config,
-                     lesson_config=lesson_config)
+DA = DBAcademyHelper(course_config, lesson_config)
 DA.reset_learning_environment()
 

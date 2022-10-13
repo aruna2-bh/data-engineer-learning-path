@@ -40,7 +40,7 @@
 
 -- COMMAND ----------
 
-SELECT * FROM silver
+SELECT * FROM silver.heartrate_device
 
 -- COMMAND ----------
 
@@ -51,9 +51,9 @@ SELECT * FROM silver
 
 -- COMMAND ----------
 
-CREATE OR REPLACE VIEW gold_dailyavg AS (
+CREATE OR REPLACE VIEW gold.heartrate_avgs AS (
   SELECT mrn, name, MEAN(heartrate) avg_heartrate, DATE_TRUNC("DD", time) date
-  FROM silver
+  FROM silver.heartrate_device
   GROUP BY mrn, name, DATE_TRUNC("DD", time))
 
 -- COMMAND ----------
@@ -63,15 +63,15 @@ CREATE OR REPLACE VIEW gold_dailyavg AS (
 
 -- COMMAND ----------
 
-SELECT * FROM gold_dailyavg
+SELECT * FROM gold.heartrate_avgs
 
 -- COMMAND ----------
 
-SHOW GRANT ON VIEW gold_dailyavg
+SHOW GRANT ON VIEW gold.heartrate_avgs
 
 -- COMMAND ----------
 
-SHOW GRANT ON TABLE silver
+SHOW GRANT ON TABLE silver.heartrate_device
 
 -- COMMAND ----------
 
@@ -98,7 +98,7 @@ SHOW GRANT ON TABLE silver
 
 -- COMMAND ----------
 
--- GRANT SELECT ON VIEW gold_dailyavg to `analysts`
+GRANT SELECT ON VIEW gold.heartrate_avgs to `analysts`
 
 -- COMMAND ----------
 
@@ -109,7 +109,7 @@ SHOW GRANT ON TABLE silver
 
 -- COMMAND ----------
 
--- GRANT USAGE ON DATABASE `${da.schema_name}` TO `analysts`
+GRANT USAGE ON DATABASE gold TO `analysts`
 
 -- COMMAND ----------
 
@@ -123,7 +123,7 @@ SHOW GRANT ON TABLE silver
 -- COMMAND ----------
 
 -- MAGIC %python
--- MAGIC print(f"SELECT * FROM {DA.catalog_name}.{DA.schema_name}.gold_dailyavg")
+-- MAGIC print(f"SELECT * FROM gold.heartrate_avgs")
 
 -- COMMAND ----------
 
@@ -133,6 +133,11 @@ SHOW GRANT ON TABLE silver
 -- MAGIC Now replace **`gold_dailyavg`** with **`silver`** and re-run the query. Notice that the query now fails. This is because the user does not have **SELECT** privilege on the **silver** table.
 -- MAGIC 
 -- MAGIC Recall though, that **gold_dailyavg** is a view that selects from **silver**. How then, can the query on **gold_dailyavg** succeed? Unity Catalog allows the query to pass because the *owner* of that view has **SELECT** privilege on **silver**. This is an important property since it allows us to implement views that can filter or mask rows or columns of a table, without allowing direct access to the underlying table we are trying to protect. We will see this mechanism in action next.
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC print(f"SELECT * FROM silver.heartrate_device ")
 
 -- COMMAND ----------
 
@@ -159,7 +164,7 @@ SHOW GRANT ON TABLE silver
 
 -- COMMAND ----------
 
-CREATE OR REPLACE VIEW gold_dailyavg AS
+CREATE OR REPLACE VIEW gold.heartrate_avgs AS
 SELECT
   CASE WHEN
     is_account_group_member('analysts') THEN 'REDACTED'
@@ -171,7 +176,7 @@ SELECT
   END AS name,
   MEAN(heartrate) avg_heartrate,
   DATE_TRUNC("DD", time) date
-  FROM silver
+  FROM silver.heartrate_device
   GROUP BY mrn, name, DATE_TRUNC("DD", time)
 
 -- COMMAND ----------
@@ -181,7 +186,7 @@ SELECT
 
 -- COMMAND ----------
 
-GRANT SELECT ON VIEW gold_dailyavg to `analysts`
+GRANT SELECT ON VIEW gold.heartrate_avgs to `analysts`
 
 -- COMMAND ----------
 
@@ -190,7 +195,7 @@ GRANT SELECT ON VIEW gold_dailyavg to `analysts`
 
 -- COMMAND ----------
 
-SELECT * FROM gold_dailyavg
+SELECT * FROM gold.heartrate_avgs
 
 -- COMMAND ----------
 
@@ -211,7 +216,7 @@ SELECT
   time,
   device_id,
   heartrate
-FROM silver
+FROM silver.heartrate_device
 WHERE
   CASE WHEN
     is_account_group_member('analysts') THEN device_id < 30
@@ -252,7 +257,7 @@ SELECT
   time,
   device_id,
   heartrate
-FROM silver
+FROM silver.heartrate_device
 WHERE
   CASE WHEN
     is_account_group_member('analysts') THEN device_id < 30
@@ -261,7 +266,7 @@ WHERE
 
 -- COMMAND ----------
 
--- GRANT SELECT ON VIEW gold_allhr to `analysts`
+GRANT SELECT ON VIEW gold_allhr to `analysts`
 
 -- COMMAND ----------
 

@@ -111,25 +111,25 @@ USE SCHEMA example
 
 -- COMMAND ----------
 
-CREATE OR REPLACE TABLE silver (device_id INT, mrn STRING, name STRING, time TIMESTAMP, heartrate DOUBLE);
+CREATE OR REPLACE TABLE heartrate_device (device_id INT, mrn STRING, name STRING, time TIMESTAMP, heartrate DOUBLE);
 
-INSERT INTO silver VALUES
+INSERT INTO heartrate_device VALUES
   (23,'40580129','Nicholas Spears','2020-02-01T00:01:58.000+0000',54.0122153343),
   (17,'52804177','Lynn Russell','2020-02-01T00:02:55.000+0000',92.5136468131),
   (37,'65300842','Samuel Hughes','2020-02-01T00:08:58.000+0000',52.1354807863),
   (23,'40580129','Nicholas Spears','2020-02-01T00:16:51.000+0000',54.6477014191),
   (17,'52804177','Lynn Russell','2020-02-01T00:18:08.000+0000',95.033344842);
   
-SELECT * FROM silver
+SELECT * FROM heartrate_device
 
 -- COMMAND ----------
 
-CREATE OR REPLACE VIEW gold AS (
+CREATE OR REPLACE VIEW agg_heartrate AS (
   SELECT mrn, name, MEAN(heartrate) avg_heartrate, DATE_TRUNC("DD", time) date
-  FROM silver
+  FROM heartrate_device
   GROUP BY mrn, name, DATE_TRUNC("DD", time)
 );
-SELECT * FROM gold
+SELECT * FROM agg_heartrate
 
 -- COMMAND ----------
 
@@ -150,7 +150,7 @@ SELECT * FROM gold
 
 GRANT USAGE ON CATALOG ${DA.my_new_catalog} TO analysts;
 GRANT USAGE ON SCHEMA example TO analysts;
-GRANT SELECT ON VIEW gold to analysts
+GRANT SELECT ON VIEW agg_heartrate to analysts
 
 -- COMMAND ----------
 
@@ -173,7 +173,7 @@ GRANT SELECT ON VIEW gold to analysts
 
 -- COMMAND ----------
 
-SELECT "SELECT * FROM ${DA.my_new_catalog}.example.gold" AS Query
+SELECT "SELECT * FROM ${DA.my_new_catalog}.example.agg_heartrate" AS Query
 
 -- COMMAND ----------
 
@@ -248,7 +248,7 @@ SELECT "SELECT ${DA.my_new_catalog}.example.mask('sensitive data') AS data" AS Q
 
 -- COMMAND ----------
 
-CREATE OR REPLACE VIEW gold AS
+CREATE OR REPLACE VIEW agg_heartrate AS
 SELECT
   CASE WHEN
     is_account_group_member('analysts') THEN 'REDACTED'
@@ -260,11 +260,11 @@ SELECT
   END AS name,
   MEAN(heartrate) avg_heartrate,
   DATE_TRUNC("DD", time) date
-  FROM silver
+  FROM heartrate_device
   GROUP BY mrn, name, DATE_TRUNC("DD", time);
 
 -- Re-issue the grant --
-GRANT SELECT ON VIEW gold to analysts
+GRANT SELECT ON VIEW agg_heartrate to analysts
 
 -- COMMAND ----------
 
@@ -273,7 +273,7 @@ GRANT SELECT ON VIEW gold to analysts
 
 -- COMMAND ----------
 
-SELECT * FROM gold
+SELECT * FROM agg_heartrate
 
 -- COMMAND ----------
 
@@ -289,13 +289,13 @@ SELECT * FROM gold
 
 -- COMMAND ----------
 
-CREATE OR REPLACE VIEW gold AS
+CREATE OR REPLACE VIEW agg_heartrate AS
 SELECT
   mrn,
   time,
   device_id,
   heartrate
-FROM silver
+FROM heartrate_device
 WHERE
   CASE WHEN
     is_account_group_member('analysts') THEN device_id < 30
@@ -303,11 +303,11 @@ WHERE
   END;
 
 -- Re-issue the grant --
-GRANT SELECT ON VIEW gold to analysts
+GRANT SELECT ON VIEW agg_heartrate to analysts
 
 -- COMMAND ----------
 
-SELECT * FROM gold
+SELECT * FROM agg_heartrate
 
 -- COMMAND ----------
 
@@ -322,7 +322,7 @@ SELECT * FROM gold
 
 -- COMMAND ----------
 
-CREATE OR REPLACE VIEW gold AS
+CREATE OR REPLACE VIEW agg_heartrate AS
 SELECT
   CASE WHEN
     is_account_group_member('analysts') THEN mask(mrn)
@@ -331,7 +331,7 @@ SELECT
   time,
   device_id,
   heartrate
-FROM silver
+FROM heartrate_device
 WHERE
   CASE WHEN
     is_account_group_member('analysts') THEN device_id < 30
@@ -339,11 +339,11 @@ WHERE
   END;
 
 -- Re-issue the grant --
-GRANT SELECT ON VIEW gold to analysts
+GRANT SELECT ON VIEW agg_heartrate to analysts
 
 -- COMMAND ----------
 
-SELECT * FROM gold
+SELECT * FROM agg_heartrate
 
 -- COMMAND ----------
 
@@ -408,7 +408,7 @@ SHOW CATALOGS
 
 -- COMMAND ----------
 
-SHOW GRANTS ON VIEW gold
+SHOW GRANTS ON VIEW agg_heartrate
 
 -- COMMAND ----------
 
@@ -417,7 +417,7 @@ SHOW GRANTS ON VIEW gold
 
 -- COMMAND ----------
 
-SHOW GRANTS ON TABLE silver
+SHOW GRANTS ON TABLE heartrate_device
 
 -- COMMAND ----------
 

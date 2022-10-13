@@ -27,6 +27,13 @@
 
 # COMMAND ----------
 
+import time
+
+# Start a timer so we can benchmark execution duration.
+setup_start = int(time.time())
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC # Get Class Config
 # MAGIC The three variables defined by these widgets are used to configure our environment as a means of controlling class cost.
@@ -34,8 +41,8 @@
 # COMMAND ----------
 
 # Setup the widgets to collect required parameters.
-from dbacademy_helper.workspace_helper import ALL_USERS # no other option for this course
-dbutils.widgets.dropdown("configure_for", ALL_USERS, [ALL_USERS], "Configure Workspace For")
+from dbacademy.dbhelper import WorkspaceHelper # no other option for this course
+dbutils.widgets.dropdown("configure_for", WorkspaceHelper.ALL_USERS, [WorkspaceHelper.ALL_USERS], "Configure Workspace For")
 
 # students_count is the reasonable estiamte to the maximum number of students
 dbutils.widgets.text("students_count", "", "Number of Students")
@@ -54,20 +61,12 @@ dbutils.widgets.text("event_name", "", "Event Name/Class Number")
 
 # COMMAND ----------
 
-lesson_config = LessonConfig(name = None,
-                             create_schema = False,
-                             create_catalog = False,
-                             requires_uc = False,
-                             installing_datasets = True,
-                             enable_streaming_support = False)
+lesson_config.create_schema = False                 # We don't need a schema when configuring the workspace
 
-DA = DBAcademyHelper(course_config=course_config,
-                     lesson_config=lesson_config)
+DA = DBAcademyHelper(course_config, lesson_config)
 DA.reset_lesson()
 DA.init()
 DA.conclude_setup()
-
-setup_start = DA.clock_start()
 
 # COMMAND ----------
 
@@ -78,7 +77,7 @@ setup_start = DA.clock_start()
 
 # COMMAND ----------
 
-instance_pool_id = DA.workspace.clusters.create_instance_pools()
+instance_pool_id = DA.workspace.clusters.create_instance_pool()
 
 # COMMAND ----------
 
@@ -91,7 +90,7 @@ instance_pool_id = DA.workspace.clusters.create_instance_pools()
 
 DA.workspace.clusters.create_all_purpose_policy(instance_pool_id)
 DA.workspace.clusters.create_jobs_policy(instance_pool_id)
-DA.workspace.clusters.create_dlt_policy(instance_pool_id)
+DA.workspace.clusters.create_dlt_policy()
 None
 
 # COMMAND ----------
@@ -105,7 +104,7 @@ None
 
 # COMMAND ----------
 
-DA.workspace.warehouses.create_shared_sql_warehouse()
+DA.workspace.warehouses.create_shared_sql_warehouse(name="Starter Warehouse")
 
 # COMMAND ----------
 

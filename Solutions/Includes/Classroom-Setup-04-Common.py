@@ -73,9 +73,8 @@ def get_pipeline_config(self, language):
     base_path = dbutils.entry_point.getDbutils().notebook().getContext().notebookPath().getOrElse(None)
     base_path = "/".join(base_path.split("/")[:-1])
     
-    da_name, da_hash = DA.get_username_hash()
-    pipeline_name = f"da-{da_name}-{da_hash}-{self.course_code.lower()}"
-    if DA.clean_lesson is not None: pipeline_name += f"-{DA.clean_lesson}"
+    pipeline_name = f"{DA.unique_name}"
+    if DA.lesson_config.clean_name is not None: pipeline_name += f"-{DA.lesson_config.clean_name}"
     pipeline_name += ": Example Pipeline"
     
     if language is None: language = dbutils.widgets.getArgument("pipeline-language", None)

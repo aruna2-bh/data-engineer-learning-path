@@ -4,8 +4,15 @@
 # COMMAND ----------
 
 def _create_silver():
+    # Use user generated catalog
+    spark.sql(f"USE CATALOG {DA.catalog_name} ")
+    
+    # Create just silver schema
+    spark.sql("CREATE SCHEMA IF NOT EXISTS silver" )
+    
+    #Create table in silver db
     spark.sql("""
-CREATE OR REPLACE TABLE silver
+CREATE OR REPLACE TABLE silver.heartrate_device
 (
   device_id  INT,
   mrn        STRING,
@@ -14,8 +21,9 @@ CREATE OR REPLACE TABLE silver
   heartrate  DOUBLE
 );""".strip())
     
+    #Insert some data
     spark.sql("""
-INSERT INTO silver VALUES
+INSERT INTO silver.heartrate_device VALUES
 (23,'40580129','Nicholas Spears','2020-02-01T00:01:58.000+0000',54.0122153343),
 (17,'52804177','Lynn Russell','2020-02-01T00:02:55.000+0000',92.5136468131),
 (37,'65300842','Samuel Hughes','2020-02-01T00:08:58.000+0000',52.1354807863),
@@ -26,6 +34,16 @@ INSERT INTO silver VALUES
 (17,'52804177','Lynn Russell','2020-02-01T00:32:56.000+0000',94.8134313932),
 (37,'65300842','Samuel Hughes','2020-02-01T00:38:54.000+0000',56.2469995332),
 (23,'40580129','Nicholas Spears','2020-02-01T00:46:57.000+0000',54.8372685558)""".strip())
+
+# COMMAND ----------
+
+def _create_gold():
+     # Use user generated catalog
+    spark.sql(f"USE CATALOG {DA.catalog_name} ")
+    
+    # Create just silver schema
+    spark.sql("CREATE SCHEMA IF NOT EXISTS gold" )
+    
 
 # COMMAND ----------
 
@@ -42,6 +60,7 @@ DA.reset_lesson()
 DA.init()
 
 _create_silver()
+_create_gold()
 
 DA.conclude_setup()
 

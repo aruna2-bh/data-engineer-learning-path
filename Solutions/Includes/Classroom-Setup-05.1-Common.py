@@ -80,17 +80,21 @@ def print_job_config_v1(self):
 @DBAcademyHelper.monkey_patch
 def create_job_v1(self):
     "Provided by DBAcademy, this function creates the prescribed job"
+    import re
     
     job_config = self.get_job_config()
 
     self.client.jobs.delete_by_name(job_config.job_name, success_only=False)
     cluster_id = dbgems.get_tags().get("clusterId")
+
+    build_name = re.sub(r"[^a-zA-Z\d]", "-", self.course_config.course_name)
+    while "--" in build_name: build_name = build_name.replace("--", "-")
     
     params = {
         "name": job_config.job_name,
         "tags": {
-            "dbacademy.course": self.course_name,
-            "dbacademy.source": self.course_name
+            "dbacademy.course": build_name,
+            "dbacademy.source": build_name
         },
         "email_notifications": {},
         "timeout_seconds": 7200,
@@ -168,6 +172,7 @@ def validate_job_v1_config(self):
 @DBAcademyHelper.monkey_patch
 def create_job_v2(self):
     "Provided by DBAcademy, this function creates the prescribed job"
+    import re
     
     job_config = self.get_job_config()
     pipeline_config = self.get_pipeline_config()
@@ -178,11 +183,14 @@ def create_job_v2(self):
     pipeline = self.client.pipelines().get_by_name(pipeline_config.pipeline_name)
     pipeline_id = pipeline.get("pipeline_id")
     
+    build_name = re.sub(r"[^a-zA-Z\d]", "-", self.course_config.course_name)
+    while "--" in build_name: build_name = build_name.replace("--", "-")
+
     params = {
         "name": job_config.job_name,
         "tags": {
-            "dbacademy.course": self.course_name,
-            "dbacademy.source": self.course_name
+            "dbacademy.course": build_name,
+            "dbacademy.source": build_name
         },
         "email_notifications": {},
         "timeout_seconds": 7200,
